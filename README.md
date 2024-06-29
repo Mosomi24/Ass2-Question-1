@@ -1,3 +1,4 @@
+QUIZ 1
 The program manages different types of vehicles in car rental .it uses C++ inheritance to model cars ,SUVs ,and trucks efficiently.
 
 FEATURES
