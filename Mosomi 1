@@ -1,0 +1,86 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <stdexcept>
+using namespace std;
+
+class Exam {
+protected:
+    int examID;
+    string subject;
+    int duration; 
+
+public:
+    Exam(int id, const string& sub, int dur) : examID(id), subject(sub), duration(dur) {
+        if (dur <= 0) {
+            throw invalid_argument("Invalid exam duration");
+        }
+    }
+    virtual ~Exam() {}
+
+    virtual void gradeExam() = 0;
+
+    void displayDetails() const {
+        cout << "Exam ID: " << examID << "\nSubject: " << subject << "\nDuration: " << duration << " minutes\n";
+    }
+};
+
+class MultipleChoiceExam : public Exam {
+private:
+    vector<bool> answers;
+
+public:
+    MultipleChoiceExam(int id, const string& sub, int dur, const vector<bool>& ans)
+        : Exam(id, sub, dur), answers(ans) {}
+
+    void gradeExam() override {
+        int correctAnswers = 0;
+        for (bool answer : answers) {
+            if (answer) {
+                correctAnswers++;
+            }
+        }
+        int score = (correctAnswers * 100) / answers.size();
+        cout << "Multiple Choice Exam graded. Score: " << score << "%\n";
+    }
+};
+
+class EssayExam : public Exam {
+private:
+    string topic;
+    int score;
+
+public:
+    EssayExam(int id, const string& sub, int dur, const string& top)
+        : Exam(id, sub, dur), topic(top), score(0) {}
+
+    void gradeExam() override {
+        cout << "Grading Essay Exam on topic: " << topic << "\nEnter score (0-100): ";
+        cin >> score;
+        if (score < 0 || score > 100) {
+            throw invalid_argument("Invalid score");
+        }
+        cout << "Essay Exam graded. Score: " << score << "%\n";
+    }
+};
+
+int main() {
+    try {
+        vector<bool> mcAnswers = {true, false, true, true};
+        MultipleChoiceExam mcExam(101, "Math", 60, mcAnswers);
+        mcExam.displayDetails();
+        mcExam.gradeExam();
+
+        EssayExam essayExam(102, "History", 120, "Discuss the causes of World War II");
+        essayExam.displayDetails();
+        essayExam.gradeExam();
+    } catch (const invalid_argument& e) {
+        cerr << "Exception: " << e.what() << '\n';
+    } catch (const runtime_error& e) {
+        cerr << "Exception: " << e.what() << '\n';
+    } catch (...) {
+        cerr << "An unknown error occurred\n";
+    }
+
+    return 0;
+}
