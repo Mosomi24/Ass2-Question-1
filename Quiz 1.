@@ -1,0 +1,105 @@
+#include <iostream>
+
+using namespace std;
+
+// Abstract base class
+class Vehicle {
+protected:
+    string make;
+    string model;
+    int year;
+
+public:
+    Vehicle(const string& make, const string& model, int year)
+        : make(make), model(model), year(year) {}
+
+    // Virtual function for calculating rental cost
+    virtual double calculateRentalCost() const = 0;
+
+    string getMake() const { return make; }
+    string getModel() const { return model; }
+    int getYear() const { return year; }
+};
+
+// Derived class Car
+class Car : public Vehicle {
+private:
+    int numDoors;
+
+public:
+    Car(const string& make, const string& model, int year, int numDoors)
+        : Vehicle(make, model, year), numDoors(numDoors) {}
+
+    // Override the calculateRentalCost function
+    virtual double calculateRentalCost() const override
+     {
+        return 7000;
+    }
+
+    int getNumDoors() const { return numDoors; }
+};
+
+// Derived class SUV
+class SUV : public Vehicle {
+private:
+    bool allWheelDrive;
+
+public:
+    SUV(const string& make, const string& model, int year, bool allWheelDrive)
+        : Vehicle(make, model, year), allWheelDrive(allWheelDrive) {}
+
+    // Override the calculateRentalCost function
+    virtual double calculateRentalCost() const override
+    {
+        return 10000.0;
+    }
+
+    bool hasAllWheelDrive() const
+    {
+        return allWheelDrive;
+    }
+};
+
+// Derived class Truck
+class Truck : public Vehicle {
+private:
+    double cargoCapacity;
+
+public:
+    Truck(const string& make, const string& model, int year, double cargoCapacity)
+        : Vehicle(make, model, year), cargoCapacity(cargoCapacity) {}
+
+    // Override the calculateRentalCost function
+    virtual double calculateRentalCost() const override
+    {
+        return 13000.0;
+    }
+
+    double getCargoCapacity() const { return cargoCapacity; }
+};
+
+// Function to display vehicle details and rental cost
+void displayVehicleInfo(const Vehicle& vehicle) {
+    cout << "Make: " << vehicle.getMake() << ", Model: " << vehicle.getModel()
+         << ", Year: " << vehicle.getYear() << endl;
+    cout << "Rental Cost: KSH" << vehicle.calculateRentalCost() << endl;
+    cout << endl;
+}
+
+int main()
+{
+    Car myCar("Toyota", "Camry", 2023, 4);
+    SUV mySUV("Honda", "CR-V", 2022, true);
+    Truck myTruck("Ford", "F-150", 2021, 250.0);
+
+    cout << "Car details:" << endl;
+    displayVehicleInfo(myCar);
+
+    cout << "SUV details:" << endl;
+    displayVehicleInfo(mySUV);
+
+    cout << "Truck details:" << endl;
+    displayVehicleInfo(myTruck);
+
+    return 0;
+}
